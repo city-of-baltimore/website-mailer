@@ -1,6 +1,6 @@
-===============
+=============
 websitemailer
-===============
+=============
 
 
 This will take a screenshot of a website and send it to a set of email addresses. This can be useful for dashboards, or other frequently updating websites that you want to have automatically delivered to your inbox.
@@ -12,10 +12,14 @@ Description
 To run the script, you can either use command line arguments, a configuration file, or a mix of both.
 
 Installation
------
+------------
+
 To install, simply run::
 
     pip install websitemailer
+
+Running
+-------
 
 To run it by command line, run::
 
@@ -51,6 +55,7 @@ You can also use a config file.::
 
 Testing
 ========
+
 To run the test suite, run::
 
     python -m tox -e py39 -- --email_username bcdotnotifications@gmail.com --email_password eV^5d97% --smtp_server smtp.gmail.com --pop_server pop.gmail.com
