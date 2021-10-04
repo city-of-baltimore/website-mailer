@@ -88,7 +88,7 @@ def test_args_mixed():
         i += 1
 
 
-def test_main_args(email_username, email_password, smtp_server):
+def test_main_args(email_username, email_password, smtp_server, chrome_binary):
     """Test the main function"""
     _delete_all_mail(email_username, email_password, smtp_server)
     unique_id = f'{uuid.uuid4()}@baltimorecity.com'
@@ -99,7 +99,7 @@ def test_main_args(email_username, email_password, smtp_server):
           '-r', 'http://www.google.com',
           '-t', email_username,
           '-f', unique_id,
-          '-b', str(list(Path('/tmp').glob('chrome-*/chrome'))[0]),
+          '-b', chrome_binary,
           '--very-verbose'
           ])
 
@@ -109,7 +109,7 @@ def test_main_args(email_username, email_password, smtp_server):
     assert unique_id in messages[0].as_string()
 
 
-def test_main_config(email_username, email_password, smtp_server):
+def test_main_config(email_username, email_password, smtp_server, chrome_binary):
     """Test the main function"""
     _delete_all_mail(email_username, email_password, smtp_server)
 
@@ -117,7 +117,7 @@ def test_main_config(email_username, email_password, smtp_server):
           '-u', email_username,
           '-p', email_password,
           '-s', smtp_server,
-          '-b', str(list(Path('/tmp').glob('chrome-*/chrome'))[0]),
+          '-b', chrome_binary,
           '--very-verbose'
           ])
 
