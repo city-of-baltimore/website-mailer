@@ -104,7 +104,7 @@ def main(_args: List[str]):
         for job in args.mailings:
             ss_paths = []
             for url in job.get('url'):
-                ss_paths.append(take_screenshot(url, driver_path))
+                ss_paths.append(take_screenshot(url, driver_path, delay=job.get('delay', 0)))
 
             logger.info(f'Using URL and email addresses from config file: from {job.get("from_email")} to '
                         f'{job.get("to_emails")}, URLs {job.get("url")}')
