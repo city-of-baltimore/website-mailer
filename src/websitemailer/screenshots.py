@@ -1,7 +1,6 @@
 """Takes a screenshot of a webpage"""
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from time import sleep
 
 from loguru import logger
 from selenium import webdriver  # type: ignore
@@ -21,11 +20,11 @@ def take_screenshot(url, driver_path, dest_file: Path = None, delay: int = 0) ->
     options.headless = True
     driver = webdriver.Chrome(driver_path, options=options)
     driver.get(url)
+    driver.implicitly_wait(delay)
     if not dest_file:
         with NamedTemporaryFile(suffix='.png') as temp_path:
             dest_file = Path(temp_path.name)
     logger.info(f'Taking screenshot of {url}, saving it to {dest_file} with driver {driver_path}')
-    sleep(delay)
     driver.save_screenshot(str(dest_file))
     driver.close()
 
