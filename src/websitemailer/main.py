@@ -38,8 +38,10 @@ def parse_args(args):
                         help='Folder to download and unpack the driver binary. Defaults to a temp directory')
     parser.add_argument('-s', '--smtp-server', required=True,
                         help='SMTP server used to send the emails')
-    parser.add_argument('-u', '--smtp-username', required=True, help='SMTP server username')
-    parser.add_argument('-p', '--smtp-password', required=True, help='SMTP server password')
+    parser.add_argument('-u', '--smtp-username', help='SMTP server username')
+    parser.add_argument('-p', '--smtp-password', help='SMTP server password')
+    parser.add_argument('-i', '--disable-tls', action='store_true',
+                        help='TLS is enabled by default. Set this if TLS should be disabled (port 25)')
     parser.add_argument('-r', '--url', help='URL of the page to screenshot. Must start with http:// or https://')
     parser.add_argument('-t', '--to-email-address', help='Email address to send the screenshot to')
     parser.add_argument('-f', '--from-email-address', help='Email address to send the screenshot to')
@@ -90,23 +92,24 @@ def main(_args: List[str]):
 
     driver_version = get_version_via_com(args.chrome_bin)
     driver_path = get_chrome_driver(driver_version, args.dest_dir)
+    tls = not args.disable_tls
 
     if args.url and args.to_email_address:
         logger.info(f'Using URL and email address from command line: {args.url} to {args.to_email_address}')
         ss_path = take_screenshot(args.url, driver_path)
         send_mail(args.from_email_address, [args.to_email_address], 'Screenshot', f'Screenshot of {args.url}',
-                  [ss_path], args.smtp_server, username=args.smtp_username, password=args.smtp_password)
+                  [ss_path], args.smtp_server, username=args.smtp_username, password=args.smtp_password, use_tls=tls)
 
     elif args.mailings:
         for job in args.mailings:
             ss_paths = []
             for url in job.get('url'):
-                ss_paths.append(take_screenshot(url, driver_path))
+                ss_paths.append(take_screenshot(url, driver_path, delay=job.get('delay', 0)))
 
             logger.info(f'Using URL and email addresses from config file: from {job.get("from_email")} to '
                         f'{job.get("to_emails")}, URLs {job.get("url")}')
             send_mail(job.get('from_email'), job.get('to_emails'), job.get('subject'), job.get('message'),
-                      ss_paths, args.smtp_server, username=args.smtp_username, password=args.smtp_password)
+                      ss_paths, args.smtp_server, username=args.smtp_username, password=args.smtp_password, use_tls=tls)
     else:
         logger.error('Either specify the --url and --email-address on the command line, or set the mailings in the '
                      'config file')

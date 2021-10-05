@@ -1,4 +1,7 @@
 """conftest.py for websitemailer."""
+import sys
+from pathlib import Path
+
 import pytest
 
 
@@ -33,3 +36,11 @@ def smtp_server_fixture(request):
 def pop_server_fixture(request):
     """POP password fixture"""
     return request.config.getoption('pop_server')
+
+
+@pytest.fixture(name='chrome_binary')
+def chrome_binary_fixture():
+    """Location of the chrome binaries for the test systems. This is not robust at all. """
+    if sys.platform == 'win32':
+        return r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+    return str(list(Path('/tmp').glob('chrome-*/chrome'))[0])
