@@ -29,7 +29,7 @@ For example, this would take a screenshot of google.com and send it through smtp
 
     python -m websitemailer.main -s smtp.gmail.com -u <smtp username> -p <smtp password> -r http://www.google.com -t <to email address> -f <from email address>
 
-You can also use a config file.::
+You can also use a config file. Note that the 'message' section can also have HTML markup.::
 
     mailings: [{
        'to_emails': ['bcdotnotifications1@gmail.com'],
